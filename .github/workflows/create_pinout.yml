@@ -1,14 +1,24 @@
 name: Generate Interactive Pinouts
-on: [push]
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
 jobs:
   generate:
     runs-on: ubuntu-latest
+
     steps:
-     - name: Generate Pinouts
-     - uses: chuckwagoncomputing/interactive-pinout@2.15
-       with:
+    - uses: actions/checkout@v4
+
+    - name: Generate Pinouts
+      uses: chuckwagoncomputing/interactive-pinout@2.15
+      with:
         mapping-path: /*.yaml
-        warnings: skip
+        warnings: "false"
+        warning-no-pins: "skip"
+        warning-dupe: "error"
         columns: |
           {
           "pin":"Pin Number",
@@ -21,6 +31,7 @@ jobs:
           [
           "function"
           ]
+        info-column: "type"
         templates: |
           {
           "___": "pin"
@@ -41,7 +52,7 @@ jobs:
           "gp_low":"aquamarine",
           "gp_pp":"cyan",
           "hall":"darkolivegreen",
-          "hl":"gold",
+          "high_logic":"gold",
           "hs":"indigo",
           "ign":"magenta",
           "inj":"maroon",
@@ -52,4 +63,3 @@ jobs:
           "usb":"lightseagreen",
           "vr":"sienna"
           }
-
